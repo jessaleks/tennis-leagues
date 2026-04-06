@@ -1,4 +1,5 @@
 import { createSignal, Show } from "solid-js";
+import { useNavigate } from "@solidjs/router";
 import { authStore } from "../stores/auth.store";
 import { groupsStore } from "../stores/groups.store";
 import "./Auth.css";
@@ -7,6 +8,8 @@ export function CreateGroup() {
   const [name, setName] = createSignal("");
   const [localLoading, setLocalLoading] = createSignal(false);
   const [localError, setLocalError] = createSignal<string | null>(null);
+
+  const navigate = useNavigate();
 
   async function handleSubmit(e: Event) {
     e.preventDefault();
@@ -23,7 +26,7 @@ export function CreateGroup() {
     try {
       const group = await groupsStore.createGroup(name(), user.uid);
       // Navigate to the new group
-      window.location.href = `/group/${group.id}`;
+      navigate(`/group/${group.id}`);
     } catch (err) {
       setLocalError(groupsStore.error() || "Failed to create group");
     } finally {

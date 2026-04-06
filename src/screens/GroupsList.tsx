@@ -1,10 +1,12 @@
 import { createSignal, onMount, Show, For } from "solid-js";
+import { useNavigate } from "@solidjs/router";
 import { authStore } from "../stores/auth.store";
 import { groupsStore, type Group } from "../stores/groups.store";
 import "./GroupsList.css";
 
 export function GroupsList() {
   const [mounted, setMounted] = createSignal(false);
+  const navigate = useNavigate();
 
   onMount(async () => {
     setMounted(true);
@@ -22,15 +24,15 @@ export function GroupsList() {
   }
 
   function openGroup(groupId: string) {
-    window.location.href = `/group/${groupId}`;
+    navigate(`/group/${groupId}`);
   }
 
   function goToCreateGroup() {
-    window.location.href = "/create-group";
+    navigate("/create-group");
   }
 
   function goToJoinGroup() {
-    window.location.href = "/join-group";
+    navigate("/join-group");
   }
 
   // Don't render until mounted

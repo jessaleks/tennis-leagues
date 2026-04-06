@@ -1,0 +1,197 @@
+/**
+ * Rating Chart Component Styles
+ * 
+ * Pure CSS styling for the SVG rating history chart.
+ * Responsive design with touch-friendly interactions.
+ */
+
+/* ============================================================================
+   Container & Wrapper
+   ============================================================================ */
+
+.rating-chart-container {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.chart-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 1rem 0;
+}
+
+.rating-chart-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* ============================================================================
+   SVG Chart Styles
+   ============================================================================ */
+
+.rating-chart-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Grid lines */
+.rating-chart-svg .grid-line {
+  stroke: #e5e7eb;
+  stroke-width: 1;
+  stroke-dasharray: 4 2;
+}
+
+/* Axis labels */
+.rating-chart-svg .axis-label {
+  font-size: 10px;
+  fill: #6b7280;
+}
+
+.rating-chart-svg .y-label {
+  font-weight: 500;
+}
+
+.rating-chart-svg .x-label {
+  font-weight: 400;
+}
+
+/* Line and area paths */
+.rating-chart-svg .line-path {
+  stroke: #4f46e5;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.rating-chart-svg .area-path {
+  stroke: none;
+}
+
+/* Data points */
+.rating-chart-svg .data-point {
+  fill: #4f46e5;
+  stroke: white;
+  stroke-width: 2;
+  cursor: pointer;
+  transition: r 0.15s ease, fill 0.15s ease;
+}
+
+.rating-chart-svg .data-point:hover {
+  fill: #4338ca;
+}
+
+/* Tooltip */
+.rating-chart-svg .tooltip-group {
+  pointer-events: none;
+}
+
+.rating-chart-svg .tooltip-bg {
+  fill: white;
+  stroke: #e5e7eb;
+  stroke-width: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.rating-chart-svg .tooltip-rating {
+  font-size: 14px;
+  font-weight: 700;
+  fill: #111827;
+}
+
+.rating-chart-svg .tooltip-date {
+  font-size: 10px;
+  fill: #6b7280;
+}
+
+.rating-chart-svg .tooltip-result {
+  font-size: 10px;
+  fill: #4b5563;
+}
+
+/* ============================================================================
+   Empty State
+   ============================================================================ */
+
+.rating-chart-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+.rating-chart-empty .empty-icon {
+  color: #d1d5db;
+}
+
+.rating-chart-empty p {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.rating-chart-empty span {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+/* ============================================================================
+   Responsive: Tablet and Desktop
+   ============================================================================ */
+
+@media (min-width: 640px) {
+  .rating-chart-container {
+    padding: 2rem;
+  }
+
+  .chart-title {
+    font-size: 1.25rem;
+  }
+
+  .rating-chart-svg .axis-label {
+    font-size: 11px;
+  }
+
+  .rating-chart-svg .tooltip-rating {
+    font-size: 15px;
+  }
+
+  .rating-chart-svg .tooltip-date,
+  .rating-chart-svg .tooltip-result {
+    font-size: 11px;
+  }
+}
+
+@media (min-width: 768px) {
+  .rating-chart-container {
+    padding: 2.5rem;
+  }
+
+  .rating-chart-svg .axis-label {
+    font-size: 12px;
+  }
+
+  .rating-chart-svg .tooltip-rating {
+    font-size: 16px;
+  }
+
+  .rating-chart-svg .tooltip-date,
+  .rating-chart-svg .tooltip-result {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .rating-chart-container {
+    padding: 3rem;
+  }
+}

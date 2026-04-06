@@ -1,4 +1,5 @@
 import { createSignal, Show, onMount } from "solid-js";
+import { useNavigate } from "@solidjs/router";
 import { authStore } from "../stores/auth.store";
 import "./Auth.css";
 
@@ -9,11 +10,13 @@ export function Login() {
   const [localError, setLocalError] = createSignal<string | null>(null);
   const [mounted, setMounted] = createSignal(false);
 
+  const navigate = useNavigate();
+
   onMount(() => {
     setMounted(true);
     // Redirect if already logged in
     if (authStore.currentUser()) {
-      window.location.href = "/";
+      navigate("/");
     }
   });
 
@@ -24,7 +27,7 @@ export function Login() {
 
     try {
       await authStore.signIn(email(), password());
-      window.location.href = "/";
+      navigate("/");
     } catch (err) {
       setLocalError(authStore.error() || "Sign in failed");
     } finally {
@@ -38,7 +41,7 @@ export function Login() {
 
     try {
       await authStore.signInWithGoogle();
-      window.location.href = "/";
+      navigate("/");
     } catch (err) {
       setLocalError(authStore.error() || "Google sign in failed");
     } finally {
