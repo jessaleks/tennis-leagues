@@ -1,0 +1,27 @@
+{
+  "id": "tennis-leagues",
+  "name": "Tennis Leagues App",
+  "status": "active",
+  "objective": "Build a mobile-friendly tennis ranking app with groups, match logging, Elo ratings, and leaderboards using SolidJS + Firebase + Tauri",
+  "context_files": [
+    ".opencode/context/project-intelligence/technical-domain.md",
+    ".opencode/context/project-intelligence/business-domain.md"
+  ],
+  "reference_files": [
+    "docs/plans/2026-03-01-tennis-leagues-design.md",
+    "package.json",
+    "src/App.tsx"
+  ],
+  "exit_criteria": [
+    "All subtasks completed",
+    "Web app builds successfully",
+    "Firebase integration working",
+    "All screens implemented per design",
+    "Zod validation on all inputs"
+  ],
+  "subtask_count": 24,
+  "completed_count": 0,
+  "created_at": "2026-03-01T00:00:00Z",
+  "bounded_context": "tennis_leagues",
+  "module": "tennis-leagues-app"
+}

@@ -1,0 +1,18 @@
+{
+  "id": "tennis-leagues-12",
+  "seq": "12",
+  "title": "Create Confirm Match UI screen",
+  "status": "pending",
+  "depends_on": ["11"],
+  "parallel": true,
+  "context_files": [],
+  "reference_files": [],
+  "suggested_agent": "OpenFrontendSpecialist",
+  "acceptance_criteria": [
+    "List of pending matches to confirm",
+    "Show match details (players, winner, scores)",
+    "Approve button",
+    "Reject button with optional reason input"
+  ],
+  "deliverables": ["src/screens/ConfirmMatch.tsx"]
+}

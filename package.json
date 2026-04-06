@@ -1,0 +1,32 @@
+{
+  "name": "tennis_leagues",
+  "version": "0.1.0",
+  "description": "Tennis league tracking app with Elo rankings",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "tauri:build:desktop": "tauri build --bundles msi,nsis,deb,appimage",
+    "tauri:build:ios": "tauri build --bundles dmg",
+    "tauri:build:android": "tauri build --target aarch64-linux-android --bundles aab,apk"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "solid-js": "^1.9.3",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-opener": "^2",
+    "firebase": "^11.0.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "typescript": "~5.6.2",
+    "vite": "^6.0.3",
+    "vite-plugin-solid": "^2.11.0",
+    "@tauri-apps/cli": "^2"
+  }
+}

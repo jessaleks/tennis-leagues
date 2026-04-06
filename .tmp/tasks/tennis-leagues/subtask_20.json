@@ -1,0 +1,17 @@
+{
+  "id": "tennis-leagues-20",
+  "seq": "20",
+  "title": "Implement notification triggers",
+  "status": "pending",
+  "depends_on": ["19", "11"],
+  "parallel": false,
+  "context_files": [],
+  "reference_files": [],
+  "suggested_agent": "CoderAgent",
+  "acceptance_criteria": [
+    "Notify opponent on match submission",
+    "Notify submitter on match confirmation with new rating",
+    "Notify group members when new member joins"
+  ],
+  "deliverables": ["src/services/notifications.ts (trigger functions)"]
+}

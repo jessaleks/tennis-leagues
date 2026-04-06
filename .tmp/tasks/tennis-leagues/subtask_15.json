@@ -1,0 +1,18 @@
+{
+  "id": "tennis-leagues-15",
+  "seq": "15",
+  "title": "Implement leaderboard data fetching",
+  "status": "pending",
+  "depends_on": ["06", "14"],
+  "parallel": false,
+  "context_files": [],
+  "reference_files": [],
+  "suggested_agent": "CoderAgent",
+  "acceptance_criteria": [
+    "Get members sorted by rating descending",
+    "Include win-loss record",
+    "Track rating trend (last 30 days)",
+    "Flag inactive players (no match in 30 days)"
+  ],
+  "deliverables": ["src/services/leaderboard.ts", "src/stores/leaderboard.store.ts"]
+}

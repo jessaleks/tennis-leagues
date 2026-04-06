@@ -1,0 +1,18 @@
+{
+  "id": "tennis-leagues-05",
+  "seq": "05",
+  "title": "Create auth UI screens (Login, Signup)",
+  "status": "pending",
+  "depends_on": ["04"],
+  "parallel": false,
+  "context_files": [],
+  "reference_files": ["src/App.tsx"],
+  "suggested_agent": "OpenFrontendSpecialist",
+  "acceptance_criteria": [
+    "Login form with email/password",
+    "Signup form with email/password + display name",
+    "Google sign-in button",
+    "Auth state routing (redirect to home if logged in)"
+  ],
+  "deliverables": ["src/screens/Login.tsx", "src/screens/Signup.tsx"]
+}

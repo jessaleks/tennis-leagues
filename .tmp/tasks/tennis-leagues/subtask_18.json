@@ -1,0 +1,18 @@
+{
+  "id": "tennis-leagues-18",
+  "seq": "18",
+  "title": "Create Head-to-Head stats UI",
+  "status": "pending",
+  "depends_on": ["17"],
+  "parallel": true,
+  "context_files": [],
+  "reference_files": [],
+  "suggested_agent": "OpenFrontendSpecialist",
+  "acceptance_criteria": [
+    "Player selector to view H2H",
+    "H2H record display",
+    "Recent match history list",
+    "Accessible from player profile"
+  ],
+  "deliverables": ["src/screens/HeadToHead.tsx", "src/components/MatchHistory.tsx"]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "tennis-leagues-16",
+  "seq": "16",
+  "title": "Create Leaderboard UI component",
+  "status": "pending",
+  "depends_on": ["15"],
+  "parallel": true,
+  "context_files": [],
+  "reference_files": [],
+  "suggested_agent": "OpenFrontendSpecialist",
+  "acceptance_criteria": [
+    "Sorted list by rating descending",
+    "Show rank, name, rating, W-L record",
+    "Trend indicators (up/down/stable arrows)",
+    "Inactive player highlighting"
+  ],
+  "deliverables": ["src/components/Leaderboard.tsx"]
+}

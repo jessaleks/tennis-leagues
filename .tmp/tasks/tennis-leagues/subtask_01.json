@@ -1,0 +1,18 @@
+{
+  "id": "tennis-leagues-01",
+  "seq": "01",
+  "title": "Set up pnpm and install Firebase + Zod dependencies",
+  "status": "pending",
+  "depends_on": [],
+  "parallel": true,
+  "context_files": [],
+  "reference_files": ["package.json"],
+  "suggested_agent": "CoderAgent",
+  "acceptance_criteria": [
+    "pnpm installed and configured",
+    "Firebase SDK installed (firebase)",
+    "Zod installed for validation",
+    "Package.json updated with new dependencies"
+  ],
+  "deliverables": ["package.json", "pnpm-lock.yaml"]
+}

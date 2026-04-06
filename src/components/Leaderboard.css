@@ -1,0 +1,363 @@
+/* Leaderboard Component Styling */
+
+/* Component Container */
+.leaderboard-component {
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+/* Header Row */
+.leaderboard-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.leaderboard-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.refresh-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.refresh-button:hover:not(:disabled) {
+  background: #f9fafb;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+.refresh-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.refresh-button svg.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Loading State */
+.leaderboard-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  gap: 1rem;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #4f46e5;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Empty State */
+.leaderboard-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.leaderboard-empty .empty-icon {
+  margin-bottom: 1rem;
+  color: #d1d5db;
+}
+
+.leaderboard-empty p {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.leaderboard-empty span {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Error State */
+.leaderboard-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.leaderboard-error p {
+  margin: 0 0 1rem;
+  color: #dc2626;
+  font-size: 0.95rem;
+}
+
+.retry-button {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4f46e5;
+  background: #eef2ff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.retry-button:hover {
+  background: #e0e7ff;
+}
+
+/* Leaderboard Table */
+.leaderboard-table {
+  width: 100%;
+}
+
+/* Table Header */
+.leaderboard-header {
+  display: grid;
+  grid-template-columns: 48px 1fr 80px 72px 48px;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.header-rank,
+.header-player,
+.header-record,
+.header-rating,
+.header-trend {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.header-record {
+  text-align: center;
+}
+
+.header-rating {
+  text-align: right;
+}
+
+.header-trend {
+  text-align: center;
+}
+
+/* Table Rows */
+.leaderboard-row {
+  display: grid;
+  grid-template-columns: 48px 1fr 80px 72px 48px;
+  align-items: center;
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.15s;
+  cursor: default;
+}
+
+.leaderboard-row:last-child {
+  border-bottom: none;
+}
+
+.leaderboard-row:hover {
+  background-color: #f9fafb;
+}
+
+/* Current User Highlight */
+.leaderboard-row.current-user {
+  background-color: #eef2ff;
+}
+
+.leaderboard-row.current-user:hover {
+  background-color: #e0e7ff;
+}
+
+/* Inactive Player Styling */
+.leaderboard-row.inactive {
+  opacity: 0.6;
+}
+
+.leaderboard-row.inactive .player-name {
+  color: #6b7280;
+}
+
+.leaderboard-row.inactive .cell-rating {
+  color: #9ca3af;
+}
+
+/* Rank Cell */
+.cell-rank {
+  display: flex;
+  justify-content: center;
+}
+
+.rank-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+/* Top 3 Rank Badges */
+.rank-badge.rank-1 {
+  background-color: #fbbf24;
+  color: #78350f;
+}
+
+.rank-badge.rank-2 {
+  background-color: #9ca3af;
+  color: #1f2937;
+}
+
+.rank-badge.rank-3 {
+  background-color: #cd8853;
+  color: white;
+}
+
+/* Default Rank Badge */
+.rank-badge.rank-4,
+.rank-badge.rank-5,
+.rank-badge.rank-6,
+.rank-badge.rank-7,
+.rank-badge.rank-8,
+.rank-badge.rank-9,
+.rank-badge.rank-10 {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+/* Player Cell */
+.cell-player {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  padding-right: 0.5rem;
+}
+
+.player-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.inactive-badge {
+  display: inline-flex;
+  padding: 0.125rem 0.375rem;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: #9ca3af;
+  background-color: #f3f4f6;
+  border-radius: 4px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+/* Record Cell */
+.cell-record {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+/* Rating Cell */
+.cell-rating {
+  text-align: right;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #4f46e5;
+}
+
+/* Trend Cell */
+.cell-trend {
+  display: flex;
+  justify-content: center;
+}
+
+.trend-indicator {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.trend-up {
+  color: #10b981;
+}
+
+.trend-down {
+  color: #ef4444;
+}
+
+.trend-stable {
+  color: #9ca3af;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+  .leaderboard-header,
+  .leaderboard-row {
+    grid-template-columns: 40px 1fr 70px 60px 40px;
+    padding: 0.75rem 1rem;
+  }
+
+  .cell-record {
+    font-size: 0.8rem;
+  }
+
+  .cell-rating {
+    font-size: 0.9rem;
+  }
+
+  .trend-indicator {
+    font-size: 1rem;
+  }
+}

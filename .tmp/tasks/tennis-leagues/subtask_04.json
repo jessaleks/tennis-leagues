@@ -1,0 +1,18 @@
+{
+  "id": "tennis-leagues-04",
+  "seq": "04",
+  "title": "Implement Firebase Authentication service",
+  "status": "pending",
+  "depends_on": ["02"],
+  "parallel": false,
+  "context_files": [],
+  "reference_files": ["docs/plans/2026-03-01-tennis-leagues-design.md"],
+  "suggested_agent": "CoderAgent",
+  "acceptance_criteria": [
+    "Email/password sign up works",
+    "Email/password login works",
+    "Google social login implemented",
+    "User session persistence working"
+  ],
+  "deliverables": ["src/services/auth.ts", "src/stores/auth.store.ts"]
+}

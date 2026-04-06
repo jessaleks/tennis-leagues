@@ -1,0 +1,17 @@
+{
+  "id": "tennis-leagues-17",
+  "seq": "17",
+  "title": "Implement head-to-head stats service",
+  "status": "pending",
+  "depends_on": ["09"],
+  "parallel": false,
+  "context_files": [],
+  "reference_files": [],
+  "suggested_agent": "CoderAgent",
+  "acceptance_criteria": [
+    "Get matches between two specific players",
+    "Calculate H2H record (wins for each)",
+    "Recent match history (last 10 matches)"
+  ],
+  "deliverables": ["src/services/headtohead.ts"]
+}

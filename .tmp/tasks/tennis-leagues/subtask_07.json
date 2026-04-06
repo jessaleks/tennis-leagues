@@ -1,0 +1,20 @@
+{
+  "id": "tennis-leagues-07",
+  "seq": "07",
+  "title": "Create group management screens",
+  "status": "completed",
+  "depends_on": ["06"],
+  "parallel": true,
+  "context_files": [],
+  "reference_files": [],
+  "suggested_agent": "OpenFrontendSpecialist",
+  "agent_id": "coder-agent",
+  "started_at": "2026-03-01T12:00:00Z",
+  "completed_at": "2026-03-01T12:30:00Z",
+  "acceptance_criteria": [
+    "Create group screen with name input",
+    "Join group screen with invite code input",
+    "Group list showing all user's groups"
+  ],
+  "deliverables": ["src/screens/CreateGroup.tsx", "src/screens/JoinGroup.tsx", "src/screens/GroupsList.tsx"]
+}

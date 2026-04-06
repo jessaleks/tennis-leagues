@@ -1,0 +1,233 @@
+/* Group View Screen Styling */
+.group-view-container {
+  min-height: 100vh;
+  padding: 1rem;
+  background-color: #f8f9fa;
+}
+
+.group-view-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.group-view-title {
+  margin: 0 0 1.5rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.group-loading,
+.group-error {
+  padding: 2rem;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.group-error {
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #dc2626;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.group-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.group-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.group-button:active {
+  transform: scale(0.98);
+}
+
+.group-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.group-button.primary {
+  background-color: #4f46e5;
+  color: white;
+}
+
+.group-button.primary:hover:not(:disabled) {
+  background-color: #4338ca;
+}
+
+.group-button.secondary {
+  background-color: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.group-button.secondary:hover:not(:disabled) {
+  background-color: #f9fafb;
+}
+
+/* Leaderboard Section */
+.leaderboard-section {
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.leaderboard-loading,
+.leaderboard-empty {
+  padding: 2rem;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.leaderboard {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.leaderboard-row {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.15s;
+}
+
+.leaderboard-row:last-child {
+  border-bottom: none;
+}
+
+.leaderboard-row:hover {
+  background-color: #f9fafb;
+}
+
+.leaderboard-rank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-right: 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #6b7280;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.leaderboard-row:first-child .leaderboard-rank {
+  background-color: #fbbf24;
+  color: #78350f;
+}
+
+.leaderboard-row:nth-child(2) .leaderboard-rank {
+  background-color: #9ca3af;
+  color: #1f2937;
+}
+
+.leaderboard-row:nth-child(3) .leaderboard-rank {
+  background-color: #cd8853;
+  color: white;
+}
+
+.leaderboard-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.leaderboard-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-badge {
+  display: inline-flex;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #4f46e5;
+  background-color: #eef2ff;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.leaderboard-record {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.leaderboard-rating {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #4f46e5;
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+
+/* Recent Matches Section */
+.recent-matches-section {
+  margin-bottom: 2rem;
+}
+
+.recent-matches-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  text-align: center;
+}
+
+.recent-matches-placeholder svg {
+  margin-bottom: 1rem;
+  opacity: 0.6;
+}
+
+.recent-matches-placeholder p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+}

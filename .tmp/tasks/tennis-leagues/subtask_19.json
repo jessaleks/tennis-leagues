@@ -1,0 +1,18 @@
+{
+  "id": "tennis-leagues-19",
+  "seq": "19",
+  "title": "Configure Firebase Cloud Messaging",
+  "status": "pending",
+  "depends_on": ["02"],
+  "parallel": false,
+  "context_files": [],
+  "reference_files": [],
+  "suggested_agent": "CoderAgent",
+  "acceptance_criteria": [
+    "FCM service worker registered",
+    "Request notification permissions",
+    "Store FCM token in user document",
+    "Send test notification"
+  ],
+  "deliverables": ["public/firebase-messaging-sw.js", "src/services/notifications.ts"]
+}

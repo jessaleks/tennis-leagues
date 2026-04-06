@@ -1,0 +1,21 @@
+{
+  "id": "tennis-leagues-10",
+  "seq": "10",
+  "title": "Create Log Match UI screen",
+  "status": "completed",
+  "agent_id": "coder-agent",
+  "started_at": "2026-03-01T00:00:00Z",
+  "completed_at": "2026-03-01T00:00:00Z",
+  "depends_on": ["09"],
+  "parallel": true,
+  "context_files": [],
+  "reference_files": [],
+  "suggested_agent": "OpenFrontendSpecialist",
+  "acceptance_criteria": [
+    "Select opponent from group members",
+    "Select winner (current user or opponent)",
+    "Optional scores input (set-by-set)",
+    "Submit creates pending match"
+  ],
+  "deliverables": ["src/screens/LogMatch.tsx", "src/screens/LogMatch.css"]
+}
