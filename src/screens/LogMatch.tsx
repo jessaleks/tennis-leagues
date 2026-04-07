@@ -1,4 +1,5 @@
 import { createSignal, onMount, Show, For, createMemo } from "solid-js";
+import { useNavigate, useParams } from "@solidjs/router";
 import { authStore } from "../stores/auth.store";
 import { groupsStore, type GroupMember } from "../stores/groups.store";
 import { matchesStore } from "../stores/matches.store";
@@ -14,6 +15,9 @@ export function LogMatch() {
   const [memberProfiles, setMemberProfiles] = createSignal<Map<string, UserProfile>>(new Map());
   const [loadingProfiles, setLoadingProfiles] = createSignal(false);
 
+  const navigate = useNavigate();
+  const params = useParams<{ groupId: string }>();
+
   // Form state
   const [selectedOpponentId, setSelectedOpponentId] = createSignal<string>("");
   const [winner, setWinner] = createSignal<"me" | "them" | null>(null);
@@ -23,11 +27,11 @@ export function LogMatch() {
   const [success, setSuccess] = createSignal(false);
 
   // Get group ID from URL
-  const groupId = window.location.pathname.split("/group/")[1]?.split("/")[0];
+  const groupId = params.groupId;
 
   onMount(async () => {
     if (!groupId) {
-      window.location.href = "/";
+      navigate("/");
       return;
     }
 
@@ -130,7 +134,7 @@ export function LogMatch() {
 
       // Navigate back after short delay
       setTimeout(() => {
-        window.location.href = `/group/${group.id}`;
+        navigate(`/group/${group.id}`);
       }, 1500);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to submit match";

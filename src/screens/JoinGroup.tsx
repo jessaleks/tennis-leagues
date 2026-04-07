@@ -1,4 +1,5 @@
 import { createSignal, Show } from "solid-js";
+import { useNavigate } from "@solidjs/router";
 import { authStore } from "../stores/auth.store";
 import { groupsStore } from "../stores/groups.store";
 import "./Auth.css";
@@ -7,6 +8,8 @@ export function JoinGroup() {
   const [inviteCode, setInviteCode] = createSignal("");
   const [localLoading, setLocalLoading] = createSignal(false);
   const [localError, setLocalError] = createSignal<string | null>(null);
+
+  const navigate = useNavigate();
 
   async function handleSubmit(e: Event) {
     e.preventDefault();
@@ -30,7 +33,7 @@ export function JoinGroup() {
     try {
       const group = await groupsStore.joinGroup(code, user.uid);
       // Navigate to the group
-      window.location.href = `/group/${group.id}`;
+      navigate(`/group/${group.id}`);
     } catch (err) {
       setLocalError(groupsStore.error() || "Failed to join group. Check your invite code.");
     } finally {

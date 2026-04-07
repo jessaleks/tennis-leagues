@@ -1,4 +1,5 @@
 import { createSignal, onMount, Show, For, createMemo } from "solid-js";
+import { useNavigate, useParams } from "@solidjs/router";
 import { authStore } from "../stores/auth.store";
 import { groupsStore, type GroupMember } from "../stores/groups.store";
 import { getUserProfile, type UserProfile } from "../services/users";
@@ -17,12 +18,15 @@ export function GroupSettings() {
   const [localError, setLocalError] = createSignal<string | null>(null);
   const [localSuccess, setLocalSuccess] = createSignal<string | null>(null);
 
+  const navigate = useNavigate();
+  const params = useParams<{ groupId: string }>();
+
   // Get group ID from URL
-  const groupId = window.location.pathname.split("/group/")[1]?.split("/")[0]?.replace("/settings", "");
+  const groupId = params.groupId;
 
   onMount(async () => {
     if (!groupId) {
-      window.location.href = "/";
+      navigate("/");
       return;
     }
 
@@ -153,7 +157,7 @@ export function GroupSettings() {
 
     try {
       await groupsStore.leaveGroup(g.id, user.uid);
-      window.location.href = "/";
+      navigate("/");
     } catch (err) {
       setLocalError(groupsStore.error() || "Failed to leave group");
     } finally {
@@ -170,7 +174,7 @@ export function GroupSettings() {
   }
 
   function goBack() {
-    window.location.href = `/group/${groupId}`;
+    navigate(`/group/${groupId}`);
   }
 
   // Loading state

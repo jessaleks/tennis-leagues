@@ -1,89 +1,62 @@
-import { createSignal, onMount, Show, For, createMemo } from "solid-js";
+import { createSignal, onMount, Show, createMemo } from "solid-js";
+import { useNavigate, useParams } from "@solidjs/router";
 import { authStore } from "../stores/auth.store";
-import { groupsStore, type GroupMember } from "../stores/groups.store";
-import { getUserProfile, type UserProfile } from "../services/users";
+import { groupsStore } from "../stores/groups.store";
+import { Leaderboard } from "../components/Leaderboard";
 import "./GroupView.css";
-
-interface MemberWithProfile extends GroupMember {
-  profile: UserProfile | null;
-}
 
 export function GroupView() {
   const [mounted, setMounted] = createSignal(false);
-  const [memberProfiles, setMemberProfiles] = createSignal<Map<string, UserProfile>>(new Map());
-  const [loadingProfiles, setLoadingProfiles] = createSignal(false);
+
+  const navigate = useNavigate();
+  const params = useParams<{ groupId: string }>();
 
   // Get group ID from URL
-  const groupId = window.location.pathname.split("/group/")[1]?.split("/")[0];
+  const groupId = params.groupId;
 
   onMount(async () => {
     if (!groupId) {
-      window.location.href = "/";
+      navigate("/");
       return;
     }
 
     setMounted(true);
 
-    // Fetch group and members
+    // Fetch group
     await groupsStore.fetchGroup(groupId);
-    await groupsStore.fetchGroupMembers(groupId);
-
-    // Fetch member profiles
-    const members = groupsStore.currentGroupMembers();
-    const userIds = members.map((m) => m.id);
-
-    if (userIds.length > 0) {
-      setLoadingProfiles(true);
-      try {
-        const { getUserProfiles } = await import("../services/users");
-        const profiles = await getUserProfiles(userIds);
-        setMemberProfiles(profiles);
-      } finally {
-        setLoadingProfiles(false);
-      }
-    }
   });
 
   async function handleRefresh() {
     if (!groupId) return;
     await groupsStore.fetchGroup(groupId);
-    await groupsStore.fetchGroupMembers(groupId);
   }
 
   function goToSettings() {
-    window.location.href = `/group/${groupId}/settings`;
+    navigate(`/group/${groupId}/settings`);
   }
 
   function goToLogMatch() {
-    window.location.href = `/group/${groupId}/log-match`;
+    navigate(`/group/${groupId}/log-match`);
   }
 
   function goBack() {
-    window.location.href = "/";
+    navigate("/");
+  }
+
+  // Handle player click - navigate to player profile
+  function handlePlayerClick(userId: string) {
+    navigate(`/group/${groupId}/player/${userId}`);
   }
 
   // Get current user
   const currentUser = authStore.currentUser;
   const group = groupsStore.currentGroup;
-  const members = groupsStore.currentGroupMembers;
 
   // Check if current user is admin
   const isAdmin = createMemo(() => {
     const g = group();
     const user = currentUser();
     return g && user && g.adminId === user.uid;
-  });
-
-  // Create sorted members list with profiles
-  const sortedMembers = createMemo<MemberWithProfile[]>(() => {
-    const mems = members();
-    const profiles = memberProfiles();
-    return mems
-      .map((member) => ({
-        ...member,
-        profile: profiles.get(member.id) || null,
-      }))
-      .sort((a, b) => b.rating - a.rating);
   });
 
   // Loading state
@@ -149,43 +122,13 @@ export function GroupView() {
         </Show>
       </div>
 
-      {/* Leaderboard / Members List */}
+      {/* Leaderboard Component - with clickable player names */}
       <div class="leaderboard-section">
         <h2 class="section-title">Leaderboard</h2>
-        
-        <Show when={groupsStore.loading() || loadingProfiles()}>
-          <div class="leaderboard-loading">Loading members...</div>
-        </Show>
-
-        <Show when={!groupsStore.loading() && !loadingProfiles() && sortedMembers().length === 0}>
-          <div class="leaderboard-empty">
-            <p>No members in this group yet.</p>
-          </div>
-        </Show>
-
-        <Show when={!groupsStore.loading() && !loadingProfiles() && sortedMembers().length > 0}>
-          <div class="leaderboard">
-            <For each={sortedMembers()}>
-              {(member, index) => (
-                <div class="leaderboard-row">
-                  <span class="leaderboard-rank">{index() + 1}</span>
-                  <div class="leaderboard-info">
-                    <span class="leaderboard-name">
-                      {member.profile?.displayName || "Unknown Player"}
-                      <Show when={member.id === group()?.adminId}>
-                        <span class="admin-badge">Admin</span>
-                      </Show>
-                    </span>
-                    <span class="leaderboard-record">
-                      {member.wins}W - {member.losses}L
-                    </span>
-                  </div>
-                  <span class="leaderboard-rating">{member.rating}</span>
-                </div>
-              )}
-            </For>
-          </div>
-        </Show>
+        <Leaderboard 
+          groupId={groupId} 
+          onPlayerClick={handlePlayerClick}
+        />
       </div>
 
       {/* Recent Matches Section (Placeholder) */}

@@ -1,4 +1,5 @@
 import { createSignal, onMount, Show, For, createMemo } from "solid-js";
+import { useNavigate, useParams } from "@solidjs/router";
 import { authStore } from "../stores/auth.store";
 import { groupsStore } from "../stores/groups.store";
 import { matchesStore, type Match } from "../stores/matches.store";
@@ -24,18 +25,21 @@ export function ConfirmMatch() {
   const [rejectingMatchId, setRejectingMatchId] = createSignal<string | null>(null);
   const [rejectReason, setRejectReason] = createSignal("");
   
+  const navigate = useNavigate();
+  const params = useParams<{ groupId: string }>();
+
   // Get group ID from URL
-  const groupId = window.location.pathname.split("/group/")[1]?.split("/")[0];
+  const groupId = params.groupId;
 
   onMount(async () => {
     if (!groupId) {
-      window.location.href = "/";
+      navigate("/");
       return;
     }
 
     const user = authStore.currentUser();
     if (!user) {
-      window.location.href = "/";
+      navigate("/");
       return;
     }
 
@@ -114,7 +118,7 @@ export function ConfirmMatch() {
       
       // Navigate back after short delay
       setTimeout(() => {
-        window.history.back();
+        navigate(-1);
       }, 1500);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to confirm match";
@@ -145,7 +149,7 @@ export function ConfirmMatch() {
       
       // Navigate back after short delay
       setTimeout(() => {
-        window.history.back();
+        navigate(-1);
       }, 1500);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to reject match";
@@ -167,7 +171,7 @@ export function ConfirmMatch() {
   }
 
   function goBack() {
-    window.history.back();
+    navigate(-1);
   }
 
   // Loading state
