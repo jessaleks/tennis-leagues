@@ -1,6 +1,6 @@
 # 202602_tennis_leagues Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-04-06
+Auto-generated from all feature plans. Last updated: 2026-04-07
 
 ## Active Technologies
 
