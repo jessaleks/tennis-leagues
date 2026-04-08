@@ -1,0 +1,106 @@
+.recent-matches {
+  padding: 8px 0;
+}
+
+.recent-matches__loading,
+.recent-matches__error,
+.recent-matches__empty {
+  text-align: center;
+  padding: 24px;
+  color: #666;
+  font-size: 14px;
+}
+
+.recent-matches__error {
+  color: #dc3545;
+}
+
+.recent-matches__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recent-matches__item {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  gap: 4px;
+}
+
+.recent-matches__item:last-child {
+  border-bottom: none;
+}
+
+.recent-matches__players {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.recent-matches__name {
+  color: #333;
+}
+
+.recent-matches__name--winner {
+  font-weight: 600;
+}
+
+.recent-matches__vs {
+  color: #999;
+  font-size: 12px;
+}
+
+.recent-matches__score {
+  font-size: 12px;
+  color: #666;
+}
+
+.recent-matches__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.recent-matches__result {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.recent-matches__result--win {
+  background: #d4edda;
+  color: #155724;
+}
+
+.recent-matches__result--loss {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.recent-matches__date {
+  color: #999;
+}
+
+.recent-matches__footer {
+  padding-top: 12px;
+  text-align: center;
+}
+
+.recent-matches__view-all {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px 16px;
+  min-height: 44px;
+}
+
+.recent-matches__view-all:hover {
+  text-decoration: underline;
+}
