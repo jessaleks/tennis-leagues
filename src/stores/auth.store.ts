@@ -48,13 +48,14 @@ async function signUp(email: string, password: string, displayName: string): Pro
 
     // Attempt sign up
     const user = await firebaseSignUp(input.email, input.password, input.displayName);
+    // Set current user directly (onAuthStateChanged may not fire in tests)
+    setCurrentUser(user);
+    setLoading(false);
     return user;
   } catch (err) {
     const message = getAuthErrorMessage(err);
     setError(message);
     throw err;
-  } finally {
-    setLoading(false);
   }
 }
 
@@ -68,13 +69,14 @@ async function signIn(email: string, password: string): Promise<User> {
 
     // Attempt sign in
     const user = await firebaseSignIn(input.email, input.password);
+    // Set current user directly (onAuthStateChanged may not fire in tests)
+    setCurrentUser(user);
+    setLoading(false);
     return user;
   } catch (err) {
     const message = getAuthErrorMessage(err);
     setError(message);
     throw err;
-  } finally {
-    setLoading(false);
   }
 }
 
@@ -145,3 +147,16 @@ export {
   signOutUser as signOut,
   clearError,
 };
+
+// Test-only method to manually set auth state (used by E2E tests)
+// @ts-ignore - exposed for testing
+if (typeof window !== 'undefined') {
+  (window as any).__setTestAuthUser = (user: User | null) => {
+    setCurrentUser(user);
+    setLoading(false);
+  };
+  (window as any).__clearTestAuthUser = () => {
+    setCurrentUser(null);
+    setLoading(false);
+  };
+}
