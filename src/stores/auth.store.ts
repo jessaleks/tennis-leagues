@@ -149,6 +149,7 @@ export {
 };
 
 // Test-only method to manually set auth state (used by E2E tests)
+// Only available in development/test environments
 // @ts-ignore - exposed for testing
 if (typeof window !== 'undefined' && import.meta.env.DEV) {
   (window as any).__setTestAuthUser = (user: User | null) => {

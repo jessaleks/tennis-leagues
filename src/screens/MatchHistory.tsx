@@ -1,4 +1,4 @@
-import { createSignal, onMount, For, Show } from "solid-js";
+import { createSignal, createEffect, For, Show } from "solid-js";
 import { useParams } from "@solidjs/router";
 import { getGroupMatches, type Match } from "../services/matches";
 
@@ -10,23 +10,30 @@ export function MatchHistory() {
   const [page, setPage] = createSignal(0);
   const pageSize = 20;
 
-  onMount(async () => {
-    try {
-      const allMatches = await getGroupMatches(params.groupId);
-      // Filter to confirmed matches only, sorted by confirmedAt descending
-      const confirmed = allMatches
-        .filter(m => m.status === "confirmed")
-        .sort((a, b) => {
-          const dateA = a.confirmedAt || new Date(0);
-          const dateB = b.confirmedAt || new Date(0);
-          return dateB.getTime() - dateA.getTime();
-        });
-      setMatches(confirmed);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load matches");
-    } finally {
-      setLoading(false);
-    }
+  // Fetch matches when groupId changes
+  createEffect(() => {
+    const groupId = params.groupId;
+    setLoading(true);
+    setError(null);
+
+    getGroupMatches(groupId)
+      .then((allMatches) => {
+        // Filter to confirmed matches only, sorted by confirmedAt descending
+        const confirmed = allMatches
+          .filter(m => m.status === "confirmed")
+          .sort((a, b) => {
+            const dateA = a.confirmedAt || new Date(0);
+            const dateB = b.confirmedAt || new Date(0);
+            return dateB.getTime() - dateA.getTime();
+          });
+        setMatches(confirmed);
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : "Failed to load matches");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   });
 
   const paginatedMatches = () => {
