@@ -1,85 +1,159 @@
-import { test as base, Page, Request } from '@playwright/test';
+import { test as base, Page, Route } from '@playwright/test';
 
-export type TestUser = {
-  email: string;
-  password: string;
-  displayName: string;
-};
+// Mock user storage
+let mockUsers: Map<string, { email: string; password: string; displayName: string }> = new Map();
+let mockSession: { user: { localId: string; email: string; displayName: string } | null } = { user: null };
 
-const TEST_USERS: Record<string, TestUser> = {
-  primary: {
-    email: 'test@example.com',
-    password: 'TestPassword123',
-    displayName: 'Test User',
-  },
-  opponent: {
-    email: 'opponent@example.com',
-    password: 'TestPassword123',
-    displayName: 'Opponent User',
-  },
-};
-
-/**
- * Waits for the page to be fully loaded (Firebase auth included)
- */
-async function waitForAppReady(page: Page): Promise<void> {
-  // Wait for the page to load
-  await page.waitForLoadState('domcontentloaded');
-  
-  // Wait for Firebase to initialize by checking for the auth container
-  // The auth pages render a form with class "auth-container" after Firebase initializes
-  try {
-    await page.waitForSelector('.auth-container, .auth-card, h1', { timeout: 10000 });
-  } catch {
-    // If no auth elements found, the page might be on a different screen
-    // Just wait a bit more
-    await page.waitForTimeout(2000);
-  }
+function resetAuth() {
+  mockUsers.clear();
+  mockSession.user = null;
 }
 
-/**
- * Clears all storage including Firebase cache
- */
-async function clearAllStorage(page: Page): Promise<void> {
-  await page.goto('/login');
-  await page.evaluate(() => {
-    localStorage.clear();
-    sessionStorage.clear();
-  });
-  // Clear IndexedDB for Firebase auth
-  await page.evaluate(async () => {
-    const databases = await indexedDB.databases();
-    for (const db of databases) {
-      if (db.name) indexedDB.deleteDatabase(db.name);
+export { resetAuth };
+
+// Helper to create mock Firebase user
+function createMockUser(email: string, displayName: string) {
+  return {
+    localId: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    email,
+    displayName,
+    idToken: `id_token_${Date.now()}`,
+    refreshToken: `refresh_token_${Date.now()}`,
+    expiresIn: '3600',
+  };
+}
+
+// Firebase Auth API handlers
+const authHandlers = [
+  // Sign up
+  async (route: Route) => {
+    const body = JSON.parse(route.request().postData() || '{}');
+    const { email, password, displayName } = body;
+
+    if (!email || !password) {
+      return route.fulfill({
+        status: 400,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          error: { code: 400, message: 'Invalid email', errors: [{ message: 'Invalid email' }] },
+        }),
+      });
     }
-  });
-  await page.reload();
-}
 
-export interface AuthFixtures {
-  testUser: TestUser;
-  loggedInPage: Page;
-}
+    if (password.length < 6) {
+      return route.fulfill({
+        status: 400,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          error: { code: 400, message: 'Weak password', errors: [{ message: 'Password should be at least 6 characters' }] },
+        }),
+      });
+    }
 
-export const test = base.extend<AuthFixtures>({
-  testUser: TEST_USERS.primary,
+    if (mockUsers.has(email)) {
+      return route.fulfill({
+        status: 400,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          error: { code: 400, message: 'Email already in use', errors: [{ message: 'Email already in use' }] },
+        }),
+      });
+    }
 
-  loggedInPage: async ({ page, testUser }, use) => {
-    // Navigate to login
-    await page.goto('/login');
-    await waitForAppReady(page);
+    const user = createMockUser(email, displayName || email.split('@')[0]);
+    mockUsers.set(email, { email, password, displayName: user.displayName });
+    mockSession.user = { localId: user.localId, email: user.email, displayName: user.displayName };
 
-    // Fill login form
-    await page.fill('input[id="email"]', testUser.email);
-    await page.fill('input[id="password"]', testUser.password);
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(user),
+    });
+  },
 
-    // Submit
-    await page.click('button[type="submit"]');
+  // Sign in
+  async (route: Route) => {
+    const body = JSON.parse(route.request().postData() || '{}');
+    const { email, password } = body;
 
-    // Wait for redirect to groups
-    await page.waitForURL('/', { timeout: 10000 });
+    const storedUser = mockUsers.get(email);
+    if (!storedUser || storedUser.password !== password) {
+      return route.fulfill({
+        status: 400,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          error: { code: 400, message: 'Invalid credentials', errors: [{ message: 'Invalid email or password' }] },
+        }),
+      });
+    }
 
-    // Use the page for tests
+    const user = createMockUser(email, storedUser.displayName);
+    mockSession.user = { localId: user.localId, email: user.email, displayName: user.displayName };
+
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(user),
+    });
+  },
+
+  // Lookup (get user info)
+  async (route: Route) => {
+    const body = JSON.parse(route.request().postData() || '{}');
+    const { idToken } = body;
+
+    if (!idToken || !mockSession.user) {
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ users: [] }),
+      });
+    }
+
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ users: [mockSession.user] }),
+    });
+  },
+
+  // Sign out
+  async (route: Route) => {
+    mockSession.user = null;
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({}),
+    });
+  },
+
+  // Refresh token
+  async (route: Route) => {
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        access_token: `access_token_${Date.now()}`,
+        expires_in: '3600',
+        token_type: 'Bearer',
+        refresh_token: `refresh_token_${Date.now()}`,
+      }),
+    });
+  },
+];
+
+export const test = base.extend({
+  page: async ({ page }, use) => {
+    // Reset state
+    resetAuth();
+
+    // Set up Firebase Auth mocking
+    await page.route('**/identitytoolkit.googleapis.com/v1/accounts:signUp', authHandlers[0]);
+    await page.route('**/identitytoolkit.googleapis.com/v1/accounts:signInWithPassword', authHandlers[1]);
+    await page.route('**/identitytoolkit.googleapis.com/v1/accounts:lookup', authHandlers[2]);
+    await page.route('**/identitytoolkit.googleapis.com/v1/accounts:signOut', authHandlers[3]);
+    await page.route('**/securetoken.googleapis.com/v1/token', authHandlers[4]);
+
     await use(page);
   },
 });
@@ -89,53 +163,46 @@ export { expect } from '@playwright/test';
 /**
  * Creates a new test user with unique email
  */
-export async function createTestUser(page: Page, overrides?: Partial<TestUser>): Promise<TestUser> {
-  const user: TestUser = {
-    ...TEST_USERS.primary,
-    email: overrides?.email ?? `test${Date.now()}@example.com`,
-    displayName: overrides?.displayName ?? `Test User ${Date.now()}`,
-    ...overrides,
-  };
+export async function createTestUser(page: Page): Promise<{ email: string; password: string; displayName: string }> {
+  const email = `test${Date.now()}@example.com`;
+  const password = 'TestPassword123';
+  const displayName = 'Test User';
 
   await page.goto('/signup');
-  await waitForAppReady(page);
-  
-  await page.fill('input[id="displayName"]', user.displayName);
-  await page.fill('input[id="email"]', user.email);
-  await page.fill('input[id="password"]', user.password);
-  await page.fill('input[id="confirmPassword"]', user.password);
+  await page.waitForLoadState('networkidle');
+
+  await page.fill('input[id="displayName"]', displayName);
+  await page.fill('input[id="email"]', email);
+  await page.fill('input[id="password"]', password);
+  await page.fill('input[id="confirmPassword"]', password);
   await page.click('button[type="submit"]');
 
   // Wait for redirect to groups
-  await page.waitForURL('/', { timeout: 10000 });
+  await page.waitForURL('/', { timeout: 15000 });
 
-  return user;
+  return { email, password, displayName };
 }
 
 /**
  * Logs in with existing test user
  */
-export async function loginUser(page: Page, user: TestUser): Promise<void> {
+export async function loginUser(page: Page, email: string, password: string): Promise<void> {
   await page.goto('/login');
-  await waitForAppReady(page);
-  
-  await page.fill('input[id="email"]', user.email);
-  await page.fill('input[id="password"]', user.password);
+  await page.waitForLoadState('networkidle');
+
+  await page.fill('input[id="email"]', email);
+  await page.fill('input[id="password"]', password);
   await page.click('button[type="submit"]');
-  await page.waitForURL('/', { timeout: 10000 });
+
+  await page.waitForURL('/', { timeout: 15000 });
 }
 
 /**
  * Logs out the current user
  */
 export async function logoutUser(page: Page): Promise<void> {
-  await clearAllStorage(page);
-}
-
-/**
- * Prepares a fresh page for testing (call in beforeEach)
- */
-export async function preparePageForTest(page: Page): Promise<void> {
-  await clearAllStorage(page);
-  await waitForAppReady(page);
+  await page.goto('/login');
+  await page.evaluate(() => localStorage.clear());
+  await page.reload();
+  await page.waitForLoadState('networkidle');
 }

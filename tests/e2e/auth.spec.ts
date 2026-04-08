@@ -1,10 +1,13 @@
 import { test, expect } from '@playwright/test';
 
-// All E2E tests are skipped because Firebase requires valid API keys and mocking.
+// E2E tests require valid Firebase configuration.
+// These tests are skipped because the app crashes on Firebase initialization
+// when VITE_FIREBASE_* environment variables are not set.
+//
 // To enable E2E tests:
-// 1. Set up MSW handlers for Firebase Auth and Firestore
-// 2. Provide valid Firebase config via .env file
-// 3. Or mock Firebase responses with MSW service worker
+// 1. Add valid Firebase config to .env file (or .env.test)
+// 2. Or implement error handling in firebase.ts to gracefully handle missing config
+// 3. Or use MSW with proper Firebase API mocking at the SDK level
 
 test.describe('Auth Flow', () => {
   test('should signup with email/password and redirect to groups', async ({ page }) => {
