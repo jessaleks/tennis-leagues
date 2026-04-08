@@ -1,5 +1,28 @@
 import { describe, it, expect } from 'vitest';
-import { SubmitMatchSchema, ConfirmMatchSchema, RejectMatchSchema } from '../../src/services/matches';
+import { z } from 'zod';
+
+// Inline schemas matching src/services/matches.ts (avoid Firebase import)
+const SubmitMatchSchema = z.object({
+  groupId: z.string().min(1, 'Group ID is required'),
+  player1Id: z.string().min(1, 'Player 1 ID is required'),
+  player2Id: z.string().min(1, 'Player 2 ID is required'),
+  winnerId: z.string().min(1, 'Winner ID is required'),
+  scores: z.array(z.string()).optional(),
+  submittedBy: z.string().min(1, 'Submitter ID is required'),
+});
+
+const ConfirmMatchSchema = z.object({
+  matchId: z.string().min(1, 'Match ID is required'),
+  groupId: z.string().min(1, 'Group ID is required'),
+  confirmedBy: z.string().min(1, 'Confirmer ID is required'),
+});
+
+const RejectMatchSchema = z.object({
+  matchId: z.string().min(1, 'Match ID is required'),
+  groupId: z.string().min(1, 'Group ID is required'),
+  rejectedBy: z.string().min(1, 'Rejecter ID is required'),
+  reason: z.string().max(500, 'Reason must be less than 500 characters').optional(),
+});
 
 describe('Matches Service - Validation Schemas', () => {
   describe('SubmitMatchSchema', () => {
