@@ -1,5 +1,5 @@
 import { createSignal, Show, onMount } from "solid-js";
-import { useNavigate } from "@solidjs/router";
+import { useNavigate, A } from "@solidjs/router";
 import { authStore } from "../stores/auth.store";
 import "./Auth.css";
 
@@ -172,7 +172,7 @@ export function Signup() {
 
         <p class="auth-link">
           Already have an account?{" "}
-          <a href="/login">Sign in</a>
+          <A href="/login">Sign in</A>
         </p>
       </div>
     </div>
