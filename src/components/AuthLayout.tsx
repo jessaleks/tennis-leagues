@@ -1,6 +1,5 @@
-import { type ParentProps } from "solid-js";
-import { useNavigate, useLocation } from "@solidjs/router";
-import { A } from "@solidjs/router";
+import { type ParentProps, Show, createEffect } from "solid-js";
+import { useNavigate, useLocation, A } from "@solidjs/router";
 import { authStore } from "../stores/auth.store";
 import "./AuthLayout.css";
 
