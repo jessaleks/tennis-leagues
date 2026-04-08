@@ -1,6 +1,7 @@
 /* @refresh reload */
 import { render } from "solid-js/web";
 import { Router, Route } from "@solidjs/router";
+import { onMount, onCleanup } from "solid-js";
 import App from "./App";
 import AuthLayout from "./components/AuthLayout";
 import { GroupsList } from "./screens/GroupsList";
@@ -14,27 +15,41 @@ import { ConfirmMatch } from "./screens/ConfirmMatch";
 import { GroupSettings } from "./screens/GroupSettings";
 import { PlayerProfile } from "./screens/PlayerProfile";
 import { MatchHistory } from "./screens/MatchHistory";
+import { initAuthListener, cleanupAuthListener } from "./stores/auth.store";
+
+// Initialize auth listener when app mounts
+function AppInitializer(props: { children: any }) {
+  onMount(() => {
+    initAuthListener();
+  });
+  onCleanup(() => {
+    cleanupAuthListener();
+  });
+  return <>{props.children}</>;
+}
 
 render(
   () => (
-    <Router root={App}>
-      {/* Public routes - no auth required */}
-      <Route path="/login" component={Login} />
-      <Route path="/signup" component={Signup} />
-      
-      {/* Protected routes - wrapped in AuthLayout with bottom nav */}
-      <Route path="/" component={AuthLayout}>
-        <Route path="/" component={GroupsList} />
-        <Route path="/create-group" component={CreateGroup} />
-        <Route path="/join-group" component={JoinGroup} />
-        <Route path="/group/:groupId" component={GroupView} />
-        <Route path="/group/:groupId/log-match" component={LogMatch} />
-        <Route path="/group/:groupId/confirm-match" component={ConfirmMatch} />
-        <Route path="/group/:groupId/settings" component={GroupSettings} />
-        <Route path="/group/:groupId/player/:playerId" component={PlayerProfile} />
-        <Route path="/group/:groupId/matches" component={MatchHistory} />
-      </Route>
-    </Router>
+    <AppInitializer>
+      <Router root={App}>
+        {/* Public routes - no auth required */}
+        <Route path="/login" component={Login} />
+        <Route path="/signup" component={Signup} />
+
+        {/* Protected routes - wrapped in AuthLayout with bottom nav */}
+        <Route path="/" component={AuthLayout}>
+          <Route path="/" component={GroupsList} />
+          <Route path="/create-group" component={CreateGroup} />
+          <Route path="/join-group" component={JoinGroup} />
+          <Route path="/group/:groupId" component={GroupView} />
+          <Route path="/group/:groupId/log-match" component={LogMatch} />
+          <Route path="/group/:groupId/confirm-match" component={ConfirmMatch} />
+          <Route path="/group/:groupId/settings" component={GroupSettings} />
+          <Route path="/group/:groupId/player/:playerId" component={PlayerProfile} />
+          <Route path="/group/:groupId/matches" component={MatchHistory} />
+        </Route>
+      </Router>
+    </AppInitializer>
   ),
   document.getElementById("root") as HTMLElement
 );

@@ -16,18 +16,26 @@ const [currentUser, setCurrentUser] = createSignal<User | null>(null);
 const [loading, setLoading] = createSignal(true);
 const [error, setError] = createSignal<string | null>(null);
 
-// Initialize auth state listener
-function initAuthListener(): void {
-  const unsubscribe = onAuthStateChanged((user) => {
+// Auth listener reference
+let unsubscribeAuth: (() => void) | null = null;
+
+// Initialize auth state listener - call this when app mounts
+export function initAuthListener(): void {
+  if (unsubscribeAuth) return; // Already initialized
+
+  unsubscribeAuth = onAuthStateChanged((user) => {
     setCurrentUser(user);
     setLoading(false);
   });
-
-  onCleanup(unsubscribe);
 }
 
-// Start auth listener on module load
-initAuthListener();
+// Cleanup function
+export function cleanupAuthListener(): void {
+  if (unsubscribeAuth) {
+    unsubscribeAuth();
+    unsubscribeAuth = null;
+  }
+}
 
 // Auth actions
 async function signUp(email: string, password: string, displayName: string): Promise<User> {

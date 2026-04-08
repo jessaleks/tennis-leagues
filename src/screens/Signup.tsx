@@ -59,12 +59,9 @@ export function Signup() {
   }
 
   // Don't render anything until mounted (to check auth state)
-  if (!mounted()) {
-    return null;
-  }
-
   return (
-    <div class="auth-container">
+    <Show when={mounted()}>
+      <div class="auth-container">
       <div class="auth-card">
         <h1 class="auth-title">Create Account</h1>
         <p class="auth-subtitle">Join the tennis leagues</p>
@@ -176,6 +173,7 @@ export function Signup() {
         </p>
       </div>
     </div>
+    </Show>
   );
 }
 
