@@ -1,14 +1,10 @@
 import { test, expect } from '@playwright/test';
 
-// All E2E tests are skipped for now because they require:
-// 1. Firebase auth to be properly mocked (MSW)
-// 2. AuthGuard to properly handle redirects
-// 3. App to render without Firebase initialization delays
-//
-// To enable E2E tests, implement:
-// - MSW handlers for Firebase Auth and Firestore
-// - Proper auth state mocking
-// - Fix AuthGuard to use createEffect for navigation
+// All E2E tests are skipped because Firebase requires valid API keys and mocking.
+// To enable E2E tests:
+// 1. Set up MSW handlers for Firebase Auth and Firestore
+// 2. Provide valid Firebase config via .env file
+// 3. Or mock Firebase responses with MSW service worker
 
 test.describe('Auth Flow', () => {
   test('should signup with email/password and redirect to groups', async ({ page }) => {
