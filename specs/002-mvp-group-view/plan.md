@@ -20,7 +20,7 @@ Complete the MVP for the Tennis Leagues app by implementing Phase 1 (AuthGuard +
 | **Language/Version** | TypeScript 5.6 |
 | **Primary Dependencies** | SolidJS 1.9, @solidjs/router 0.16, Firebase 11 (Auth + Firestore), Zod 3.24, Tauri 2.x |
 | **Storage** | Firestore — existing collections (`/users/{userId}`, `/groups/{groupId}`, `/groups/{groupId}/members/{userId}`, `/groups/{groupId}/matches/{matchId}`) — no new collections |
-| **Testing** | `npm test && npm run lint` (`tsc --noEmit` validates types) |
+| **Testing** | `pnpm test && pnpm run lint` (`tsc --noEmit` validates types) |
 | **Target Platform** | Web (primary) → Mobile/Desktop via Tauri |
 | **Project Type** | Mobile-first web application |
 | **Performance Goals** | <100ms navigation transitions, 60fps scrolling |

@@ -11,7 +11,7 @@ This MVP introduces no new external interfaces. All data access is through **exi
 |---------|---------------|---------------|
 | `auth.ts` | `signIn()`, `signUp()`, `signOut()`, `onAuthStateChanged()` | None — reused as-is |
 | `groups.ts` | `getGroups()`, `createGroup()`, `joinGroup()` | None — reused as-is |
-| `matches.ts` | `submitMatch()`, `confirmMatch()`, `getMatchesByGroup()` | Add `getRecentMatches()` if not present |
+| `matches.ts` | `submitMatch()`, `confirmMatch()`, `getGroupMatches()` | Add `getRecentMatches()` if not present |
 | `leaderboard.ts` | `getLeaderboard()` | None — reused as-is |
 | `users.ts` | `getUserDisplayName()` | None — reused as-is |
 | `player-profile.ts` | `getPlayerProfile()`, `getRatingHistory()` | None — reused as-is |
