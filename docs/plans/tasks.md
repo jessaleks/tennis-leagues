@@ -1,7 +1,7 @@
-# Tasks: Tennis Leagues App
+# Tasks: Tennis Leagues MVP
 
-**Input**: Design document from `docs/plans/2026-03-01-tennis-leagues-design.md`
-**Prerequisites**: Design doc (required), existing codebase in `src/`
+**Input**: Implementation plan from `docs/plans/mvp-plan.md`
+**Prerequisites**: Design doc (`docs/plans/2026-03-01-tennis-leagues-design.md`), MVP plan (required), existing codebase in `src/`
 
 **Tests**: Not explicitly requested — test tasks omitted.
 
@@ -76,70 +76,15 @@
 
 ---
 
-## Phase 4: User Story 2 — Player Profile (Priority: P2)
-
-**Goal**: Tap a player to see their rating history, win/loss record, and recent matches
-
-**Independent Test**: Tap any player name → see profile page with rating, W-L record, and match history
-
-### Implementation for User Story 2
-
-- [ ] T021 [P] [US2] Create `src/services/player-profile.ts` with functions: `getPlayerStats()`, `getRatingHistory()`, `getPlayerMatches()`
-- [ ] T022 [P] [US2] Create `src/stores/player-profile.store.ts` with signals for current profile, rating history, and player matches
-- [ ] T023 [US2] Create `src/screens/PlayerProfile.tsx` displaying player name, photo, rating, W-L record, and match list
-- [ ] T024 [P] [US2] Create `src/components/RatingChart.tsx` — a simple SVG line chart showing rating over time
-- [ ] T025 [US2] Add route `/group/:groupId/player/:playerId` pointing to PlayerProfile in `src/routes.ts`
-- [ ] T026 [US2] Make player names in `src/components/Leaderboard.tsx` and `src/components/RecentMatches.tsx` clickable, linking to player profile route
-
-**Checkpoint**: Player profiles are fully navigable from leaderboard and match lists
-
----
-
-## Phase 5: User Story 3 — Head-to-Head Stats (Priority: P3)
-
-**Goal**: View head-to-head record between any two players in the group
-
-**Independent Test**: From a player profile or match, view H2H record showing wins each way and recent matches
-
-### Implementation for User Story 3
-
-- [ ] T027 [P] [US3] Add `getHeadToHead()` function to `src/services/matches.ts` filtering matches by two player IDs
-- [ ] T028 [US3] Create `src/components/HeadToHead.tsx` showing H2H record (wins per player) and recent matches between the pair
-- [ ] T029 [US3] Add H2H section to `src/screens/PlayerProfile.tsx` when viewing another player's profile
-- [ ] T030 [P] [US3] Add "Compare" action in `src/screens/PlayerProfile.tsx` that lets user select a second player to view H2H
-
-**Checkpoint**: H2H stats viewable between any two players from profile or match context
-
----
-
-## Phase 6: User Story 4 — Notifications (Priority: P3)
-
-**Goal**: Users receive notifications for match confirmation requests and confirmed results
-
-**Independent Test**: Submit a match → opponent gets notification. Confirm a match → submitter gets notification with new rating.
-
-### Implementation for User Story 4
-
-- [ ] T031 [P] [US4] Create `src/services/notifications.ts` with Firebase Cloud Messaging setup: `requestPermission()`, `onMessage()`, `getToken()`
-- [ ] T032 [P] [US4] Create `src/stores/notifications.store.ts` with signals for notification list and unread count
-- [ ] T033 [US4] Create `src/components/NotificationBell.tsx` icon with unread badge for the app layout header
-- [ ] T034 [US4] Create `src/screens/Notifications.tsx` listing notification history with read/unread state
-- [ ] T035 [US4] Add route `/notifications` in `src/routes.ts` and link NotificationBell in `src/components/AppLayout.tsx`
-- [ ] T036 [US4] Trigger notification writes in `src/services/matches.ts` on `submitMatch()` and `confirmMatch()`
-
-**Checkpoint**: Notification bell shows unread count, tapping opens notification list, match events trigger notifications
-
----
-
 ## Phase N: Polish & Cross-Cutting Concerns
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T037 [P] Add error boundary component in `src/components/ErrorBoundary.tsx` wrapping the router outlet
-- [ ] T038 [P] Create `src/components/Skeleton.tsx` loading component and integrate into GroupView, GroupsList, and PlayerProfile
-- [ ] T039 Audit all screen CSS files in `src/screens/*.css` for mobile responsiveness — verify 44px touch targets and proper spacing at 375px width
-- [ ] T040 [P] Add `src/screens/AccountSettings.tsx` with display name edit, photo upload, and logout (route: `/settings`)
-- [ ] T041 Clean up unused imports and ensure TypeScript strict mode has zero errors with `pnpm exec tsc --noEmit`
+- [ ] T021 [P] Add error boundary component in `src/components/ErrorBoundary.tsx` wrapping the router outlet
+- [ ] T022 [P] Create `src/components/Skeleton.tsx` loading component and integrate into GroupView, GroupsList, and PlayerProfile
+- [ ] T023 Audit all screen CSS files in `src/screens/*.css` for mobile responsiveness — verify 44px touch targets and proper spacing at 375px width
+- [ ] T024 [P] Add `src/screens/AccountSettings.tsx` with display name edit, photo upload, and logout (route: `/settings`)
+- [ ] T025 Clean up unused imports and ensure TypeScript strict mode has zero errors with `pnpm exec tsc --noEmit`
 
 ---
 
@@ -149,18 +94,8 @@
 
 - **Setup (Phase 1)**: No dependencies — can start immediately
 - **Foundational (Phase 2)**: Depends on Setup completion — BLOCKS all user stories
-- **User Stories (Phase 3–6)**: All depend on Foundational phase completion
-  - US1 (Group View) and US2 (Player Profile) can run in parallel after Phase 2
-  - US3 (H2H) depends on US2 (needs Player Profile to show H2H)
-  - US4 (Notifications) is independent — can run in parallel with US1/US2
+- **User Stories (Phase 3)**: Depends on Foundational phase completion
 - **Polish (Final Phase)**: Depends on all desired user stories being complete
-
-### User Story Dependencies
-
-- **US1 (Complete Group View)**: Can start after Foundational (Phase 2) — no story dependencies
-- **US2 (Player Profile)**: Can start after Foundational (Phase 2) — no story dependencies
-- **US3 (H2H Stats)**: Depends on US2 (Player Profile must exist to show H2H)
-- **US4 (Notifications)**: Can start after Foundational (Phase 2) — no story dependencies
 
 ### Within Each User Story
 
@@ -172,24 +107,30 @@
 ### Parallel Opportunities
 
 - All Setup tasks marked [P] can run in parallel (T002, T005, T006)
-- All Foundational tasks marked [P] can run in parallel within Phase 2
-- Once Foundational completes: US1, US2, and US4 can start in parallel
-- Within US1: T016 and T017 can run in parallel
-- Within US2: T021 and T022 can run in parallel, then T024 in parallel with T023
-- Within US4: T031 and T032 can run in parallel
+- All Foundational tasks marked [P] can run in parallel within Phase 2 (T008, T009, T011, T012, T014, T015)
+- Within US1: T016, T017, and T020 can run in parallel
 
 ---
 
 ## Parallel Example: After Foundational Phase
 
 ```bash
-# Launch US1, US2, US4 simultaneously (US3 waits for US2):
+# Launch AuthGuard and AppLayout in parallel:
+Task: "Create AuthGuard component (T005)"
+Task: "Create AppLayout with bottom nav (T006)"
+
+# Launch all navigation conversions in parallel:
+Task: "Convert Signup.tsx (T008)"
+Task: "Convert GroupsList.tsx (T009)"
+Task: "Convert CreateGroup.tsx (T011)"
+Task: "Convert JoinGroup.tsx (T012)"
+Task: "Convert ConfirmMatch.tsx (T014)"
+Task: "Convert GroupSettings.tsx (T015)"
+
+# Launch US1 components in parallel:
 Task: "Integrate Leaderboard into GroupView (T016)"
-Task: "Create player-profile service (T021)"
-Task: "Create notifications service (T031)"
 Task: "Create RecentMatches component (T017)"
-Task: "Create player-profile store (T022)"
-Task: "Create notifications store (T032)"
+Task: "Create MatchHistory screen (T020)"
 ```
 
 ---
@@ -208,21 +149,8 @@ Task: "Create notifications store (T032)"
 
 1. Complete Setup + Foundational → routing works
 2. Add US1 → Group View complete → Deploy/Demo (MVP!)
-3. Add US2 → Player Profiles → Deploy/Demo
-4. Add US3 → H2H Stats → Deploy/Demo
-5. Add US4 → Notifications → Deploy/Demo
-6. Each story adds value without breaking previous stories
-
-### Parallel Team Strategy
-
-With multiple developers:
-
-1. Team completes Setup + Foundational together
-2. Once Foundational is done:
-   - Developer A: US1 (Complete Group View)
-   - Developer B: US2 (Player Profile)
-   - Developer C: US4 (Notifications)
-3. After US2 completes: Developer B picks up US3 (H2H Stats)
+3. Polish phase → ErrorBoundary, Skeletons, AccountSettings
+4. Each story adds value without breaking previous stories
 
 ---
 
