@@ -83,16 +83,21 @@ export interface AppUser {
 
 // Create user document in Firestore
 async function createUserDocument(user: User): Promise<void> {
-  const userRef = doc(db, "users", user.uid);
-  const existingDoc = await getDoc(userRef);
+  try {
+    const userRef = doc(db, "users", user.uid);
+    const existingDoc = await getDoc(userRef);
 
-  if (!existingDoc.exists()) {
-    await setDoc(userRef, {
-      email: user.email,
-      displayName: user.displayName || user.email?.split("@")[0] || "Player",
-      photoURL: user.photoURL,
-      createdAt: serverTimestamp(),
-    });
+    if (!existingDoc.exists()) {
+      await setDoc(userRef, {
+        email: user.email,
+        displayName: user.displayName || user.email?.split("@")[0] || "Player",
+        photoURL: user.photoURL,
+        createdAt: serverTimestamp(),
+      });
+    }
+  } catch (error) {
+    // Log error but don't throw - user document creation is not critical for auth
+    console.error("Failed to create user document:", error);
   }
 }
 

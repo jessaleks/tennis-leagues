@@ -1,5 +1,5 @@
 import { createSignal, Show, onMount } from "solid-js";
-import { useNavigate } from "@solidjs/router";
+import { useNavigate, A } from "@solidjs/router";
 import { authStore } from "../stores/auth.store";
 import "./Auth.css";
 
@@ -59,12 +59,9 @@ export function Signup() {
   }
 
   // Don't render anything until mounted (to check auth state)
-  if (!mounted()) {
-    return null;
-  }
-
   return (
-    <div class="auth-container">
+    <Show when={mounted()}>
+      <div class="auth-container">
       <div class="auth-card">
         <h1 class="auth-title">Create Account</h1>
         <p class="auth-subtitle">Join the tennis leagues</p>
@@ -172,10 +169,11 @@ export function Signup() {
 
         <p class="auth-link">
           Already have an account?{" "}
-          <a href="/login">Sign in</a>
+          <A href="/login">Sign in</A>
         </p>
       </div>
     </div>
+    </Show>
   );
 }
 

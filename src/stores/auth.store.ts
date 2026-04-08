@@ -1,4 +1,4 @@
-import { createSignal, createEffect, onCleanup } from "solid-js";
+import { createSignal, onCleanup } from "solid-js";
 import type { User } from "firebase/auth";
 import {
   signUp as firebaseSignUp,
@@ -9,8 +9,6 @@ import {
   validateSignUpInput,
   validateSignInInput,
   getAuthErrorMessage,
-  type SignUpInput,
-  type SignInInput,
 } from "../services/auth";
 
 // Auth state signals
@@ -18,18 +16,26 @@ const [currentUser, setCurrentUser] = createSignal<User | null>(null);
 const [loading, setLoading] = createSignal(true);
 const [error, setError] = createSignal<string | null>(null);
 
-// Initialize auth state listener
-function initAuthListener(): void {
-  const unsubscribe = onAuthStateChanged((user) => {
+// Auth listener reference
+let unsubscribeAuth: (() => void) | null = null;
+
+// Initialize auth state listener - call this when app mounts
+export function initAuthListener(): void {
+  if (unsubscribeAuth) return; // Already initialized
+
+  unsubscribeAuth = onAuthStateChanged((user) => {
     setCurrentUser(user);
     setLoading(false);
   });
-
-  onCleanup(unsubscribe);
 }
 
-// Start auth listener on module load
-initAuthListener();
+// Cleanup function
+export function cleanupAuthListener(): void {
+  if (unsubscribeAuth) {
+    unsubscribeAuth();
+    unsubscribeAuth = null;
+  }
+}
 
 // Auth actions
 async function signUp(email: string, password: string, displayName: string): Promise<User> {
@@ -42,13 +48,14 @@ async function signUp(email: string, password: string, displayName: string): Pro
 
     // Attempt sign up
     const user = await firebaseSignUp(input.email, input.password, input.displayName);
+    // Set current user directly (onAuthStateChanged may not fire in tests)
+    setCurrentUser(user);
+    setLoading(false);
     return user;
   } catch (err) {
     const message = getAuthErrorMessage(err);
     setError(message);
     throw err;
-  } finally {
-    setLoading(false);
   }
 }
 
@@ -62,13 +69,14 @@ async function signIn(email: string, password: string): Promise<User> {
 
     // Attempt sign in
     const user = await firebaseSignIn(input.email, input.password);
+    // Set current user directly (onAuthStateChanged may not fire in tests)
+    setCurrentUser(user);
+    setLoading(false);
     return user;
   } catch (err) {
     const message = getAuthErrorMessage(err);
     setError(message);
     throw err;
-  } finally {
-    setLoading(false);
   }
 }
 
@@ -115,6 +123,11 @@ export const authStore = {
   loading,
   error,
 
+  // Derived state
+  get isAuthenticated(): boolean {
+    return currentUser() !== null;
+  },
+
   // Actions
   signUp,
   signIn,
@@ -131,6 +144,20 @@ export {
   signUp,
   signIn,
   signInWithGoogle,
-  signOut,
+  signOutUser as signOut,
   clearError,
 };
+
+// Test-only method to manually set auth state (used by E2E tests)
+// Only available in development/test environments
+// @ts-ignore - exposed for testing
+if (typeof window !== 'undefined' && import.meta.env.DEV) {
+  (window as any).__setTestAuthUser = (user: User | null) => {
+    setCurrentUser(user);
+    setLoading(false);
+  };
+  (window as any).__clearTestAuthUser = () => {
+    setCurrentUser(null);
+    setLoading(false);
+  };
+}

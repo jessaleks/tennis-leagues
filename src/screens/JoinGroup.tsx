@@ -1,5 +1,5 @@
 import { createSignal, Show } from "solid-js";
-import { useNavigate } from "@solidjs/router";
+import { useNavigate, A } from "@solidjs/router";
 import { authStore } from "../stores/auth.store";
 import { groupsStore } from "../stores/groups.store";
 import "./Auth.css";
@@ -88,7 +88,7 @@ export function JoinGroup() {
         </form>
 
         <p class="auth-link">
-          Or <a href="/create-group">create a new group</a>
+          Or <A href="/create-group">create a new group</A>
         </p>
       </div>
     </div>

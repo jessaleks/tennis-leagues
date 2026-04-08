@@ -1,0 +1,86 @@
+.match-history {
+  padding: 16px;
+}
+
+.match-history__header {
+  margin-bottom: 16px;
+}
+
+.match-history__header h1 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.match-history__loading,
+.match-history__error,
+.match-history__empty {
+  text-align: center;
+  padding: 32px;
+  color: #666;
+}
+
+.match-history__error {
+  color: #dc3545;
+}
+
+.match-history__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.match-history__item {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  border-bottom: 1px solid #e5e5e5;
+  gap: 4px;
+}
+
+.match-history__players {
+  font-weight: 500;
+}
+
+.match-history__winner {
+  font-size: 14px;
+  color: #666;
+}
+
+.match-history__score {
+  font-size: 14px;
+  color: #888;
+}
+
+.match-history__date {
+  font-size: 12px;
+  color: #999;
+}
+
+.match-history__pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+}
+
+.match-history__btn {
+  padding: 8px 16px;
+  min-height: 44px;
+  min-width: 80px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.match-history__btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.match-history__page-info {
+  font-size: 14px;
+  color: #666;
+}
