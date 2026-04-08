@@ -1,4 +1,4 @@
-import { createSignal, createEffect, onCleanup } from "solid-js";
+import { createSignal, onCleanup } from "solid-js";
 import type { User } from "firebase/auth";
 import {
   signUp as firebaseSignUp,
@@ -9,8 +9,6 @@ import {
   validateSignUpInput,
   validateSignInInput,
   getAuthErrorMessage,
-  type SignUpInput,
-  type SignInInput,
 } from "../services/auth";
 
 // Auth state signals
@@ -115,6 +113,11 @@ export const authStore = {
   loading,
   error,
 
+  // Derived state
+  get isAuthenticated(): boolean {
+    return currentUser() !== null;
+  },
+
   // Actions
   signUp,
   signIn,
@@ -131,6 +134,6 @@ export {
   signUp,
   signIn,
   signInWithGoogle,
-  signOut,
+  signOutUser as signOut,
   clearError,
 };
