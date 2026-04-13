@@ -1,6 +1,7 @@
 import { createSignal, onMount, For, Show } from "solid-js";
 import { useNavigate } from "@solidjs/router";
-import { getGroupMatches, type Match } from "../services/matches";
+import { getConfirmedGroupMatches, type Match } from "../services/matches";
+import { getUserProfiles, type UserProfile } from "../services/users";
 import { authStore } from "../stores/auth.store";
 
 interface RecentMatchesProps {
@@ -11,6 +12,7 @@ interface RecentMatchesProps {
 export function RecentMatches(props: RecentMatchesProps) {
   const navigate = useNavigate();
   const [matches, setMatches] = createSignal<Match[]>([]);
+  const [playerProfiles, setPlayerProfiles] = createSignal<Map<string, UserProfile>>(new Map());
   const [loading, setLoading] = createSignal(true);
   const [error, setError] = createSignal<string | null>(null);
 
@@ -18,17 +20,30 @@ export function RecentMatches(props: RecentMatchesProps) {
 
   onMount(async () => {
     try {
-      const allMatches = await getGroupMatches(props.groupId);
-      // Filter to confirmed matches only, sorted by confirmedAt descending
-      const confirmed = allMatches
-        .filter(m => m.status === "confirmed")
+      // Fetch confirmed matches with server-side filtering
+      const confirmedMatches = await getConfirmedGroupMatches(props.groupId);
+      
+      // Sort by confirmedAt descending and limit
+      const sorted = confirmedMatches
         .sort((a, b) => {
           const dateA = a.confirmedAt || new Date(0);
           const dateB = b.confirmedAt || new Date(0);
           return dateB.getTime() - dateA.getTime();
         })
         .slice(0, limit);
-      setMatches(confirmed);
+      
+      // Collect all unique player IDs
+      const playerIds = new Set<string>();
+      sorted.forEach(m => {
+        playerIds.add(m.player1Id);
+        playerIds.add(m.player2Id);
+      });
+      
+      // Fetch player profiles for display names
+      const profiles = await getUserProfiles(Array.from(playerIds));
+      
+      setMatches(sorted);
+      setPlayerProfiles(profiles);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load matches");
     } finally {
@@ -49,8 +64,8 @@ export function RecentMatches(props: RecentMatchesProps) {
   };
 
   const getPlayerName = (playerId: string) => {
-    // For now, show truncated ID - in production, would resolve from user profiles
-    return playerId.slice(0, 8);
+    const profile = playerProfiles().get(playerId);
+    return profile?.displayName || playerId.slice(0, 8);
   };
 
   const isWinner = (match: Match, playerId: string) => {
